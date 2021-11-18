@@ -4,23 +4,27 @@ enum Field {
     cross
 }
 
+
 const gs: number = 16;
+
+const offsets: number[] = [1, gs+1, gs, gs-1];
+
 
 class Game {
     data: Field[] = [];
     turn: boolean = false;
 
     constructor() {
-        this.data = Array(256).fill(0);
+        this.data = Array(gs*gs).fill(0);
     }
 
-    play(x: number, y: number) {
-        this.data[x+y*gs] = this.turn ? 1 : 2;
+    play(pos: number) {
+        this.data[pos] = this.turn ? 1 : 2;
         this.turn = !this.turn;
     }
 
-    isValid(x: number, y: number) {
-        return this.data[x+y*gs] == Field.empty;
+    isValid(pos: number) {
+        return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
     }
 
     

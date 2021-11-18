@@ -21,14 +21,17 @@ function mouseClicked(e: MouseEvent) {
     const offset = canvas.getBoundingClientRect();
     const x = Math.floor((e.clientX-offset.left) / mp);
     const y = Math.floor((e.clientY-offset.top) / mp);
+
+    const p = x + y*GRID_SIZE;
+
+    if(!game.isValid(p)) return;
     
-    if(!game.isValid(x, y)) return;
     if(game.turn) {
         drawer.circle(x, y);
     }else {
         drawer.cross(x, y);
     }
-    game.play(x, y);
+    game.play(p);
 }
 
 canvas.onclick = mouseClicked;
