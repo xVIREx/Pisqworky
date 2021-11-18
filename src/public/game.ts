@@ -1,12 +1,27 @@
+enum Field {
+    empty,
+    circle,
+    cross
+}
+
+const gs: number = 16;
+
 class Game {
-    data: boolean[][] = [];
+    data: Field[] = [];
     turn: boolean = false;
 
-    contructor() {
-        this.data = new Array(16).fill(new Array(16).fill(false));
+    constructor() {
+        this.data = Array(256).fill(0);
     }
 
     play(x: number, y: number) {
+        this.data[x+y*gs] = this.turn ? 1 : 2;
         this.turn = !this.turn;
     }
+
+    isValid(x: number, y: number) {
+        return this.data[x+y*gs] == Field.empty;
+    }
+
+    
 }

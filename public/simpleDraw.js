@@ -45,27 +45,45 @@ class Drawer {
         }
     }
     applyStyle(drawStyle) {
-        this.ctx.lineWidth = drawStyle.lineWidth;
+        this.ctx.lineWidth = drawStyle.lineWidth * this.mp * 0.02;
         this.ctx.strokeStyle = drawStyle.strokeStyle;
         this.ctx.fillStyle = drawStyle.fillStyle;
     }
 }
 class PisqworkyDrawer extends Drawer {
-    constructor() {
-        super(...arguments);
+    constructor(ctx, mp, size, shapeRadius) {
+        super(ctx, mp, size);
         this.crossDS = {
             lineWidth: 8,
             strokeStyle: "red",
             fillStyle: "red"
         };
+        this.shapeRadius = shapeRadius;
     }
-    grid_reconstruct(data) {
+    gridReconstruct(data) {
         super.grid(this.size);
+        for (let i = 0; i < 256; i++) {
+            let x = i % this.size;
+            let y = Math.floor(i / this.size);
+            switch (data[i]) {
+                case Field.circle:
+                    this.circle(x, y);
+                    break;
+                case Field.cross:
+                    this.cross(x, y);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
-    cross(x, y, r, customDS) {
+    circle(x, y, r, customDS) {
+        super.circle(x, y, r || this.shapeRadius, customDS);
+    }
+    cross(x, y, customDS) {
         x = mp * (x + 1 / 2);
         y = mp * (y + 1 / 2);
-        r *= 0.5 * this.mp;
+        let r = this.shapeRadius * 0.5 * this.mp;
         this.line(x - r, y - r, x + r, y + r, customDS || this.crossDS);
         this.line(x + r, y - r, x - r, y + r, customDS || this.crossDS);
     }

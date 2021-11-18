@@ -67,7 +67,7 @@ class Drawer {
     }
 
     applyStyle(drawStyle: DrawStyle) {
-        this.ctx.lineWidth = drawStyle.lineWidth;
+        this.ctx.lineWidth = drawStyle.lineWidth * this.mp * 0.02;
         this.ctx.strokeStyle = drawStyle.strokeStyle;
         this.ctx.fillStyle = drawStyle.fillStyle;
     }
@@ -81,16 +81,42 @@ class PisqworkyDrawer extends Drawer {
         fillStyle: "red"
     }
 
-    grid_reconstruct(data: boolean[][]): void {
-        super.grid(this.size);
+    shapeRadius: number;
+
+    constructor(ctx: CanvasRenderingContext2D, mp: number, size: number, shapeRadius: number) {
+        super(ctx, mp, size);
+        this.shapeRadius = shapeRadius;
     }
 
-    cross(x: number, y: number, r: number, customDS?: DrawStyle) {
+    gridReconstruct(data: number[]): void {
+        super.grid(this.size);
+        for(let i = 0; i<256; i++) {
+            let x = i%this.size;
+            let y = Math.floor(i/this.size)
+            
+            switch(data[i]) {
+                case Field.circle:
+                    this.circle(x, y);
+                    break;
+                case Field.cross:
+                    this.cross(x, y);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    circle(x: number, y: number, r?: number, customDS?: DrawStyle) {
+        super.circle(x, y, r || this.shapeRadius, customDS);
+    }
+
+    cross(x: number, y: number, customDS?: DrawStyle) {
 
         x = mp * (x+1/2);
         y = mp * (y+1/2);
 
-        r *= 0.5 * this.mp;
+        let r: number = this.shapeRadius * 0.5 * this.mp;
 
         this.line(x-r, y-r, x+r, y+r, customDS || this.crossDS);
         this.line(x+r, y-r, x-r, y+r, customDS || this.crossDS);
