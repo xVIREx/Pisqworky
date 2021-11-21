@@ -1,9 +1,10 @@
 "use strict";
 const canvas = document.querySelector("canvas");
 var mp;
-const drawer = new PisqworkyDrawer(canvas.getContext('2d'), mp, 16, 0.5);
-let game = new Game();
 const GRID_SIZE = 16;
+const drawer = new PisqworkyDrawer(canvas.getContext('2d'), mp, GRID_SIZE, 0.5);
+let game = new Game();
+let canPlay = true;
 function windowResized() {
     mp = (Math.min(window.innerHeight, window.innerWidth) * 0.8) / GRID_SIZE; /* should cover 80% of page */
     canvas.width = mp * GRID_SIZE;
@@ -16,15 +17,35 @@ function mouseClicked(e) {
     const offset = canvas.getBoundingClientRect();
     const x = Math.floor((e.clientX - offset.left) / mp);
     const y = Math.floor((e.clientY - offset.top) / mp);
-    if (!game.isValid(x, y))
+    playerMove(x, y);
+}
+function playerMove(x, y) {
+    const p = x + y * GRID_SIZE;
+    if (!game.isValid(p) || !canPlay)
         return;
-    if (game.turn) {
-        drawer.circle(x, y);
+    drawer.cross(x, y);
+    game.play(p);
+    if (game.checkWin(p)) {
+        win();
+        canPlay = false;
     }
-    else {
-        drawer.cross(x, y);
+    else
+        aiMove();
+}
+function aiMove() {
+    const p = getBestMove(game.data);
+    drawer.circle(p % GRID_SIZE, Math.floor(p / GRID_SIZE));
+    game.play(p);
+    if (game.checkWin(p)) {
+        lose();
+        canPlay = false;
     }
-    game.play(x, y);
+}
+function win() {
+    console.log("WIN");
+}
+function lose() {
+    console.log("LOSE");
 }
 canvas.onclick = mouseClicked;
 window.onresize = windowResized;

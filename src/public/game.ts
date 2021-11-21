@@ -27,5 +27,20 @@ class Game {
         return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
     }
 
-    
+    checkWin(pos: number) {
+        const v = this.data[pos];
+        for(let i = 0; i<offsets.length; i++) {
+            let c: number = 0;
+            for(let j = 0; j<5; j++) {
+                if(this.data[pos+offsets[i]*j] != v) break;
+                c++;
+            }
+            for(let j = -1; j>-5; j--) {
+                if(this.data[pos+offsets[i]*j] != v) break;
+                c++;
+            }
+            if(c>=5) return true;
+        }
+        return false;
+    }
 }
