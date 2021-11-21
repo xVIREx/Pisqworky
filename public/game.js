@@ -18,7 +18,7 @@ class Game {
         this.turn = !this.turn;
     }
     isValid(pos) {
-        return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
+        return pos >= 0 && pos < gs * gs && this.data[pos] == Field.empty;
     }
     checkWin(pos) {
         const v = this.data[pos];

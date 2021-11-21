@@ -24,7 +24,7 @@ class Game {
     }
 
     isValid(pos: number) {
-        return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
+        return pos >= 0 && pos < gs*gs && this.data[pos] == Field.empty;
     }
 
     checkWin(pos: number) {

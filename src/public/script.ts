@@ -1,17 +1,15 @@
 const canvas: HTMLCanvasElement = document.querySelector("canvas");
 var mp: number;
 
-const GRID_SIZE: number = 16;
-
-const drawer: PisqworkyDrawer = new PisqworkyDrawer(canvas.getContext('2d'), mp, GRID_SIZE, 0.5);
+const drawer: PisqworkyDrawer = new PisqworkyDrawer(canvas.getContext('2d'), mp, gs, 0.5);
 let game: Game = new Game();
 
 let canPlay = true;
 
 function windowResized() {
-    mp = (Math.min(window.innerHeight, window.innerWidth)*0.8) / GRID_SIZE; /* should cover 80% of page */
-    canvas.width = mp * GRID_SIZE;
-    canvas.height = mp * GRID_SIZE;
+    mp = (Math.min(window.innerHeight, window.innerWidth)*0.8) / gs; /* should cover 80% of page */
+    canvas.width = mp * gs;
+    canvas.height = mp * gs;
 
     drawer.mp = mp;    
     drawer.background();
@@ -27,7 +25,7 @@ function mouseClicked(e: MouseEvent) {
 }
 
 function playerMove(x: number, y: number) {
-    const p = x + y*GRID_SIZE;
+    const p = x + y*gs;
 
     if(!game.isValid(p) || !canPlay) return;
     
@@ -43,9 +41,9 @@ function playerMove(x: number, y: number) {
 }
 
 function aiMove() {
-    const p: number = getBestMove(game.data);
+    const p: number = getBestMove(0, new SimulatedBoard(game.data), false);
 
-    drawer.circle(p%GRID_SIZE, Math.floor(p/GRID_SIZE));
+    drawer.circle(p%gs, Math.floor(p/gs));
     game.play(p);
 
     if(game.checkWin(p)) {
