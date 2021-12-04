@@ -7,6 +7,7 @@ var Field;
 })(Field || (Field = {}));
 const gs = 16;
 const offsets = [1, gs + 1, gs, gs - 1];
+const offsetsV = [[-1, 0], [1, 0], [-1, -1], [1, 1], [0, -1], [0, 1], [1, -1], [-1, 1]];
 class Game {
     constructor() {
         this.data = [];
@@ -15,6 +16,8 @@ class Game {
     }
     play(pos) {
         this.data[pos] = this.turn ? 1 : 2;
+        if (this.turn)
+            console.log(evaluateMove(this.data, pos, this.turn ? 1 : 2));
         this.turn = !this.turn;
     }
     isValid(pos) {
@@ -25,12 +28,14 @@ class Game {
         for (let i = 0; i < offsets.length; i++) {
             let c = 0;
             for (let j = 0; j < 5; j++) {
-                if (this.data[pos + offsets[i] * j] != v)
+                let p = pos + offsets[i] * j;
+                if (this.data[p] != v)
                     break;
                 c++;
             }
             for (let j = -1; j > -5; j--) {
-                if (this.data[pos + offsets[i] * j] != v)
+                let p = pos + offsets[i] * j;
+                if (this.data[p] != v)
                     break;
                 c++;
             }
