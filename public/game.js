@@ -15,13 +15,11 @@ class Game {
         this.data = Array(gs * gs).fill(0);
     }
     play(pos) {
-        this.data[pos] = this.turn ? 1 : 2;
-        if (this.turn)
-            console.log(evaluateMove(this.data, pos, this.turn ? 1 : 2));
+        this.data[pos] = +this.turn + 1;
         this.turn = !this.turn;
     }
     isValid(pos) {
-        return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
+        return pos >= 0 && pos < gs * gs && this.data[pos] == Field.empty;
     }
     checkWin(pos) {
         const v = this.data[pos];

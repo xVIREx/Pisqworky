@@ -30,9 +30,10 @@ function playerMove(x, y) {
         canPlay = false;
     }
     else
-        aiMove();
+        setTimeout(() => aiMove(), 500);
 }
 function aiMove() {
+    console.log('running');
     const p = getBestMove(game.data);
     drawer.circle(p % GRID_SIZE, Math.floor(p / GRID_SIZE));
     game.play(p);

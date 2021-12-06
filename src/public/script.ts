@@ -38,11 +38,12 @@ function playerMove(x: number, y: number) {
         win();
         canPlay = false;
     }
-    else aiMove();
+    else setTimeout(()=>aiMove(), 500);
     
 }
 
 function aiMove() {
+    console.log('running');
     const p: number = getBestMove(game.data);
 
     drawer.circle(p%GRID_SIZE, Math.floor(p/GRID_SIZE));

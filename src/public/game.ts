@@ -20,13 +20,12 @@ class Game {
     }
 
     play(pos: number) {
-        this.data[pos] = this.turn ? 1 : 2;
-        if(this.turn) console.log(evaluateMove(this.data, pos, this.turn ? 1 : 2));
+        this.data[pos] = +this.turn + 1;
         this.turn = !this.turn;
     }
 
     isValid(pos: number) {
-        return pos >= 0 && pos < 256 && this.data[pos] == Field.empty;
+        return pos >= 0 && pos < gs*gs && this.data[pos] == Field.empty;
     }
 
     checkWin(pos: number) {
