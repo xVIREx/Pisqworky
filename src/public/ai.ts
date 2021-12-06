@@ -1,17 +1,20 @@
 function getBestMove(data: number[]): number {
     let player = 1;
-    let bestMove: number[] = [5, -1];
-    for(let i = 0; i<data.length; i++) {
-        if(data[i] != 0) continue;
-        data[i] = player;
-        let score: number = evaluateMove(data, i, player);
-        if(score<bestMove[0]) {
-            bestMove[0] = score;
-            bestMove[1] = i;
-        }
-        data[i] = 0;
+    
+
+}
+
+function getBestMoveAdvanced(data: number[], player: boolean): number {
+    const p = +player+1;
+    const o = +player;
+
+    let score = [0, 0];
+    let positions = Array(5).fill([]);
+
+    for(let i  = 0; i<data.length; i++) {
+        
     }
-    return bestMove[1];
+
 }
 
 function flr(v: number) {
