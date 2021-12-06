@@ -7,7 +7,7 @@ const scoreTable = [
     [0]
 ]
 
-const maxDepth = 13;
+const maxDepth = 5;
 
 
 function getBestMove(data: number[]): number {
@@ -91,7 +91,7 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
             bestMove[0] = scoreTable[0][0];
             bestMove[1] = myEval[0][0][0];
         }
-        let sl = 1;
+        let sl = 2;
         let i = myEval[1];
         for(; i<3 && sl > 0; i++) {
             if(myEval[0][i].length == 0) continue;

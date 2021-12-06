@@ -2,8 +2,8 @@
 var Field;
 (function (Field) {
     Field[Field["empty"] = 0] = "empty";
-    Field[Field["circle"] = 1] = "circle";
-    Field[Field["cross"] = 2] = "cross";
+    Field[Field["cross"] = 1] = "cross";
+    Field[Field["circle"] = 2] = "circle";
 })(Field || (Field = {}));
 const gs = 16;
 const offsets = [1, gs + 1, gs, gs - 1];

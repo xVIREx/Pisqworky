@@ -1,7 +1,7 @@
 enum Field {
     empty,
-    circle,
-    cross
+    cross,
+    circle
 }
 
 
