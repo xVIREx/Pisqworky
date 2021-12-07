@@ -8,13 +8,13 @@ const scoreTable = [
 ]
 
 const maxDepth = 5;
-
+const inf = Infinity;
 
 function getBestMove(data: number[]): number {
-    return getBestMoveAdvanced(data, false, maxDepth);
+    return getBestMoveAdvanced(data, false, maxDepth, -inf, inf);
 }
 
-function getBestMoveAdvanced(data: number[], player: boolean, depth: number): number {
+function getBestMoveAdvanced(data: number[], player: boolean, depth: number, alpha: number, beta: number): number {
     const p = +player+1;
     const o = +(!player)+1;
 
@@ -40,10 +40,10 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
 
     if(depth == 0) {
         if(myEval > enemyEval) return -scoreTable[myEval[1]][Math.min(myEval[0][myEval[1]].length, scoreTable[myEval[1]].length)];
-        return scoreTable[enemyEval[1]][Math.min(enemyEval[0][enemyEval[1]].length, scoreTable[enemyEval[1]].length)];
+        return scoreTable[enemyEval[1]+1][Math.min(enemyEval[0][enemyEval[1]+1].length, scoreTable[enemyEval[1]+1].length)];
     }
 
-    const bestMove: number[] = [0, -1];
+    const bestMove: number[] = [-inf, -1];
 
     // check whether can the enemy do in one and we cant
     if(enemyEval[1] < myEval[1]) {        
@@ -59,7 +59,7 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
                 const pos = enemyEval[0][0][0];
                 bestMove[1] = pos;
                 data[pos] = p;
-                bestMove[0] = getBestMoveAdvanced(data, !player, depth-1);
+                bestMove[0] = getBestMoveAdvanced(data, !player, depth-1, beta, alpha);                
                 data[pos] = 0;
             }            
 
@@ -74,8 +74,10 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
                 for(let j = 0; j<enemyEval[0][i].length; j++) {
                     const pos = enemyEval[0][i][j];
                     data[pos] = o;
-                    let score = getBestMoveAdvanced(data, !player, depth-1);
+                    let score = getBestMoveAdvanced(data, !player, depth-1, -beta, -alpha);
                     data[pos] = 0;
+                    alpha = Math.max(alpha, score);
+                    if(beta <= alpha) break;
                     if(score > bestMove[0]) {
                         bestMove[0] = score;
                         bestMove[1] = enemyEval[0][i][j];
@@ -98,8 +100,10 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
             for(let j = 0; j<myEval[0][i].length; j++) {
                 const pos = myEval[0][i][j];
                 data[pos] = p;
-                let score = getBestMoveAdvanced(data, !player, depth-1);
+                let score = getBestMoveAdvanced(data, !player, depth-1, -beta, -alpha);                
                 data[pos] = 0;
+                alpha = Math.max(alpha, score);
+                if(beta <= alpha) break;
                 if(score > bestMove[0]) {
                     bestMove[0] = score;
                     bestMove[1] = myEval[0][i][j];
@@ -114,10 +118,11 @@ function getBestMoveAdvanced(data: number[], player: boolean, depth: number): nu
         }
     }
 
-    bestMove[0] = -bestMove[0];
     if(depth == maxDepth) {
         console.log(bestMove[0]);
     }
+    bestMove[0] = -bestMove[0];
+    
     return bestMove[+(depth==maxDepth)];
 
 }
