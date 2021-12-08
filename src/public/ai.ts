@@ -10,120 +10,39 @@ const scoreTable = [
 const maxDepth = 5;
 const inf = Infinity;
 
-function getBestMove(data: number[]): number {
-    return getBestMoveAdvanced(data, false, maxDepth, -inf, inf);
+class AI {
+    data: number[];
+
+    constructor(data: number[]) {
+        this.data = data;
+    }
+    getBestMove() {
+        const bestMove = search(this.data, this.data, this.data);
+        return bestMove;
+    }
 }
 
-function getBestMoveAdvanced(data: number[], player: boolean, depth: number, alpha: number, beta: number): number {
-    const p = +player+1;
-    const o = +(!player)+1;
 
-    
-    const enemyEval: any = [Array(6).fill(0).map((x) => []), 5];
-    const myEval: any = [Array(6).fill(0).map((x) => []), 5];
+function search(data: number[], attack: number[], defense: number[]) {
+    let bestMove = -1;
+    let bestScore = -inf;
 
-    for(let i  = 0; i<data.length; i++) {
-        if(data[i] != 0) continue;
-        const priority = evaluateMove(data, i, o);
+    // return position eval if search finished
+    if(depth == 0) return evaluatePosition(data);
+    // store the positions from best to worse and remove duplicates
+    let positions = 
+    // search each position: positions stored
 
-        enemyEval[0][priority].push(i);
-        enemyEval[1] = Math.min(enemyEval[1], priority)
-    }
+    // return best move if first iteration
+    if(depth == maxDepth) return bestMove;
+    // return best eval
+    return -bestScore;
+}
 
-    for(let i  = 0; i<data.length; i++) {
-        if(data[i] != 0) continue;
-        const priority = evaluateMove(data, i, p);
-        myEval[0][priority].push(i);
-        myEval[1] = Math.min(myEval[1], priority);
-    }
-
-
-    if(depth == 0) {
-        if(myEval > enemyEval) return -scoreTable[myEval[1]][Math.min(myEval[0][myEval[1]].length, scoreTable[myEval[1]].length)];
-        return scoreTable[enemyEval[1]+1][Math.min(enemyEval[0][enemyEval[1]+1].length, scoreTable[enemyEval[1]+1].length)];
-    }
-
-    const bestMove: number[] = [-inf, -1];
-
-    // check whether can the enemy do in one and we cant
-    if(enemyEval[1] < myEval[1]) {        
-        // explore only defense moves of priority 0
-        if (enemyEval[1] == 0) {
-            // check if we are able to defend
-            if(enemyEval[0][0].length > 1) {
-                //not able to defend return worst score
-                bestMove[0] = -scoreTable[0][0];
-                bestMove[1] = enemyEval[0][0][0];
-            }
-            else {
-                const pos = enemyEval[0][0][0];
-                bestMove[1] = pos;
-                data[pos] = p;
-                bestMove[0] = getBestMoveAdvanced(data, !player, depth-1, beta, alpha);                
-                data[pos] = 0;
-            }            
-
-        }
-        else {
-            let i = enemyEval[1];
-            if(enemyEval[1] > 2) {
-                bestMove[0] = scoreTable[bestMove[1]][0];
-                bestMove[1] = enemyEval[0][i][0];
-            }
-            else {
-                for(let j = 0; j<enemyEval[0][i].length; j++) {
-                    const pos = enemyEval[0][i][j];
-                    data[pos] = o;
-                    let score = getBestMoveAdvanced(data, !player, depth-1, -beta, -alpha);
-                    data[pos] = 0;
-                    alpha = Math.max(alpha, score);
-                    if(beta <= alpha) break;
-                    if(score > bestMove[0]) {
-                        bestMove[0] = score;
-                        bestMove[1] = enemyEval[0][i][j];
-                    }
-                }
-            }
-        }
-        
-            
-    }
-    else {
-        if(myEval[1] == 0) {
-            bestMove[0] = scoreTable[0][0];
-            bestMove[1] = myEval[0][0][0];
-        }
-        let sl = 2;
-        let i = myEval[1];
-        for(; i<3 && sl > 0; i++) {
-            if(myEval[0][i].length == 0) continue;
-            for(let j = 0; j<myEval[0][i].length; j++) {
-                const pos = myEval[0][i][j];
-                data[pos] = p;
-                let score = getBestMoveAdvanced(data, !player, depth-1, -beta, -alpha);                
-                data[pos] = 0;
-                alpha = Math.max(alpha, score);
-                if(beta <= alpha) break;
-                if(score > bestMove[0]) {
-                    bestMove[0] = score;
-                    bestMove[1] = myEval[0][i][j];
-                }
-            }   
-            
-            sl--;
-        }
-        if(bestMove[1] == -1) {
-            bestMove[0] = scoreTable[i][0];
-            bestMove[1] = myEval[0][i][0];
-        }
-    }
-
-    if(depth == maxDepth) {
-        console.log(bestMove[0]);
-    }
-    bestMove[0] = -bestMove[0];
-    
-    return bestMove[+(depth==maxDepth)];
+function filterSortPositions(positions: number[]) {
+    let result: number[][] = Array(5).fill(0).map(x=>[]);
+    const u: boolean[] = Array(gs*gs).fill(false);
+    positions.forEach(x=>u[x] = true);
 
 }
 

@@ -5,6 +5,7 @@ const GRID_SIZE: number = 16;
 
 const drawer: PisqworkyDrawer = new PisqworkyDrawer(canvas.getContext('2d'), mp, GRID_SIZE, 0.5);
 let game: Game = new Game();
+let ai = AI(game.data);
 
 let canPlay = true;
 
